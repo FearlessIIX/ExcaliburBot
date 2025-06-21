@@ -1,0 +1,16 @@
+{
+  "name": "crusaderbot-061825",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.71",
+    "discord.js": "^14.20.0"
+  }
+}
