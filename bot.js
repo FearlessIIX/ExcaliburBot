@@ -4,10 +4,6 @@ const { Client, Collection, Events, GatewayIntentBits, MessageFlags, AttachmentB
 const Canvas = require("@napi-rs/canvas");
 const { token } = require('./config.json');
 
-const { createCanvas, Image } = require('@napi-rs/canvas');
-const { readFile } = require('fs/promises');
-const { request } = require('undici');
-
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 // Add collection to client containing commands
@@ -72,7 +68,17 @@ client.on(Events.InteractionCreate, async interaction => {
 			const avatarBarW = canvas.width / 3
 			// Set alpha to 1/3, then make a background for avatar to sit on
 			context.globalAlpha = 0.33
-			context.fillStyle = "##c9a6a5"
+
+			// If you are a special person, your name will come up as a different color
+			if (target.id == "528476089941491713") {
+				context.fillStyle = "#15EAED"
+			}
+			else if (target.id == "541001349651890176") {
+				context.fillStyle = "#4F0606"
+			}
+			else {
+				context.fillStyle = "#c9a6a5"
+			}
 
 			context.fillRect(0, 0, avatarBarW, canvas.height)
 
@@ -92,8 +98,6 @@ client.on(Events.InteractionCreate, async interaction => {
 			// Grab the users avatar, and load it
 			const avatar = await Canvas.loadImage(target.displayAvatarURL({ extension: "png" }));
 
-			
-
 			// Save the context so we can continue unclipped after drawing avatar
 			context.save()
 
@@ -108,13 +112,199 @@ client.on(Events.InteractionCreate, async interaction => {
 			// Finally draw the avatar onto the canvas, limited by our previous clip. Then restore the old context
 			context.drawImage(avatar, avatarPosW, avatarPosH, avatarSize, avatarSize);
 			context.restore()
+			
 
-
-			context.font = "40px serif"
+			context.font = "50px serif"
 			const textWidth = context.measureText(target.displayName).width
 			const textPlacementLocation = (canvas.width / 3 + (canvas.width - canvas.width / 3) / 2) - textWidth / 2
 
 			context.fillText(target.displayName, textPlacementLocation, 50)
+
+
+			const centerPointX = canvas.width / 3 + (canvas.width - canvas.width / 3) / 2
+			const centerPointY = canvas.height / 2
+
+			const strokeLen = (canvas.width - canvas.width / 3) / 4
+
+			context.lineWidth = 4
+
+
+			const mm = 0 - strokeLen
+			const pp = 0 + strokeLen
+			const p = 0 + strokeLen / 2
+			const m = 0 - strokeLen / 2
+
+
+			// Begin drawing stat crystal
+			context.beginPath()
+			context.moveTo(centerPointX + mm, centerPointY + m)
+
+			context.lineTo(centerPointX + mm, centerPointY + p)
+			context.lineTo(centerPointX, centerPointY + pp)
+			context.lineTo(centerPointX + pp, centerPointY + p)
+			context.lineTo(centerPointX + pp, centerPointY + m)
+			context.lineTo(centerPointX, centerPointY + mm)
+			context.lineTo(centerPointX + mm, centerPointY + m)
+
+			// finish and fill stat crystal
+			context.closePath()
+
+			context.globalAlpha = 0.33
+			context.fill()
+
+			context.globalAlpha = 1
+			context.stroke()
+
+			context.beginPath()
+			context.moveTo(centerPointX, centerPointY)
+			context.lineTo(centerPointX + mm, centerPointY + p)
+
+			context.moveTo(centerPointX, centerPointY)
+			context.lineTo(centerPointX, centerPointY + pp)
+
+			context.moveTo(centerPointX, centerPointY)
+			context.lineTo(centerPointX + pp, centerPointY + p)
+
+			context.moveTo(centerPointX, centerPointY)
+			context.lineTo(centerPointX + pp, centerPointY + m)
+
+			context.moveTo(centerPointX, centerPointY)
+			context.lineTo(centerPointX, centerPointY + mm)
+
+			context.moveTo(centerPointX, centerPointY)
+			context.lineTo(centerPointX + mm, centerPointY + m)
+
+			context.closePath()
+			context.stroke()
+
+
+			// If you are a special person, your name will come up as a different color
+			if (target.id == "528476089941491713" || target.id == "541001349651890176") {
+				context.fillStyle = (target.id == "528476089941491713") ? "#FFFFFF" : "#A62C2B"
+			}
+
+			// Insert stat bars into crystal, each one requires its own code smh
+			context.beginPath()
+			context.moveTo(centerPointX, centerPointY)
+
+			// TODO: Later we will grab user stat percentages in this area
+			let statPercentage = 0.75
+
+			context.lineTo(centerPointX + mm * statPercentage, centerPointY + m * statPercentage)
+			context.lineTo(centerPointX + mm * statPercentage, centerPointY + p * statPercentage)
+			context.lineTo(centerPointX, centerPointY)
+
+			context.closePath()
+
+			context.globalAlpha = 0.75
+			context.fill()
+			context.globalAlpha = 1
+
+			context.stroke()
+
+			context.beginPath()
+			context.moveTo(centerPointX, centerPointY)
+
+
+			// TODO: Later we will grab user stat percentages in this area
+			statPercentage = 0.9
+
+			context.lineTo(centerPointX + mm * statPercentage, centerPointY + p * statPercentage)
+			context.lineTo(centerPointX, centerPointY + pp * statPercentage)
+			context.lineTo(centerPointX, centerPointY)
+
+			context.closePath()
+
+			context.globalAlpha = 0.75
+			context.fill()
+			context.globalAlpha = 1
+
+			context.stroke()
+
+			context.beginPath()
+			context.moveTo(centerPointX, centerPointY)
+
+
+			// TODO: Later we will grab user stat percentages in this area
+			statPercentage = 0.65
+
+			context.lineTo(centerPointX, centerPointY + pp * statPercentage)
+			context.lineTo(centerPointX + pp * statPercentage, centerPointY + p * statPercentage)
+			context.lineTo(centerPointX, centerPointY)
+
+			context.closePath()
+
+			context.globalAlpha = 0.75
+			context.fill()
+			context.globalAlpha = 1
+
+			context.stroke()
+
+			context.beginPath()
+			context.moveTo(centerPointX, centerPointY)
+
+
+			// TODO: Later we will grab user stat percentages in this area
+			statPercentage = 0.1
+
+			context.lineTo(centerPointX + pp * statPercentage, centerPointY + p * statPercentage)
+			context.lineTo(centerPointX + pp * statPercentage, centerPointY + m * statPercentage)
+			context.lineTo(centerPointX, centerPointY)
+
+			context.closePath()
+
+			context.globalAlpha = 0.75
+			context.fill()
+			context.globalAlpha = 1
+
+			context.stroke()
+
+			context.beginPath()
+			context.moveTo(centerPointX, centerPointY)
+
+
+			// TODO: Later we will grab user stat percentages in this area
+			statPercentage = 0.3
+
+			context.lineTo(centerPointX + pp * statPercentage, centerPointY + m * statPercentage)
+			context.lineTo(centerPointX, centerPointY + mm * statPercentage)
+			context.lineTo(centerPointX, centerPointY)
+
+			context.closePath()
+
+			context.globalAlpha = 0.75
+			context.fill()
+			context.globalAlpha = 1
+
+			context.stroke()
+
+			context.beginPath()
+			context.moveTo(centerPointX, centerPointY)
+
+
+			// TODO: Later we will grab user stat percentages in this area
+			statPercentage = 1
+
+			context.lineTo(centerPointX, centerPointY + mm * statPercentage)
+			context.lineTo(centerPointX + mm * statPercentage, centerPointY + m * statPercentage)
+			context.lineTo(centerPointX, centerPointY)
+
+			context.closePath()
+
+			context.globalAlpha = 0.75
+			context.fill()
+			context.globalAlpha = 1
+
+			context.stroke()
+
+
+			// If you are a special person, your name will come up as a different color
+			if (target.id == "528476089941491713" || target.id == "541001349651890176") {
+				context.fillStyle = (target.id == "528476089941491713") ? "#15EAED" : "#4F0606"
+
+				context.globalAlpha = 0.15
+				context.fillRect(0,0, canvas.width, canvas.height)
+			}
 
 
 			// Build the final attachment for sending
@@ -153,3 +343,10 @@ client.login(token);
 
 //1384802562376728616
 //1170537864099008582
+
+//Strength
+//Intellect
+//Agility
+//Vitality
+//Perception
+//Technique
